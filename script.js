@@ -96,15 +96,23 @@ function renderCart() {
     .map(
       (entry, index) => `
         <div class="cart-row">
-          <span>${entry.title} - ${entry.size}</span>
-          <strong>${fromMoney(entry.price)}</strong>
-          <button type="button" aria-label="Remove ${entry.title}" data-remove="${index}">&times;</button>
+          <div class="cart-item-summary">
+            <span>${entry.title} - ${entry.size}</span>
+            <strong>${fromMoney(entry.price)} each</strong>
+          </div>
+          <div class="quantity-control" aria-label="Quantity for ${entry.title}">
+            <button type="button" aria-label="Decrease quantity" data-quantity="${index}" data-change="-1">-</button>
+            <span>Qty ${entry.quantity}</span>
+            <button type="button" aria-label="Increase quantity" data-quantity="${index}" data-change="1">+</button>
+          </div>
+          <strong>${fromMoney(entry.price * entry.quantity)}</strong>
+          <button class="cart-remove" type="button" aria-label="Remove ${entry.title}" data-remove="${index}">&times;</button>
         </div>
       `
     )
     .join("");
 
-  const total = selected.reduce((sum, entry) => sum + entry.price, 0);
+  const total = selected.reduce((sum, entry) => sum + entry.price * entry.quantity, 0);
   cartTotal.textContent = `Estimated total from: ${money(total)}`;
   syncSelectedButtons();
 }
@@ -145,11 +153,21 @@ menuGrid.addEventListener("click", (event) => {
     title: `${item.script} ${item.label}`,
     size,
     price,
+    quantity: 1,
   });
   renderCart();
 });
 
 cartItems.addEventListener("click", (event) => {
+  const quantityButton = event.target.closest("button[data-quantity]");
+  if (quantityButton) {
+    const index = Number(quantityButton.dataset.quantity);
+    const change = Number(quantityButton.dataset.change);
+    selected[index].quantity = Math.max(1, selected[index].quantity + change);
+    renderCart();
+    return;
+  }
+
   const button = event.target.closest("button[data-remove]");
   if (!button) return;
 
@@ -162,10 +180,15 @@ orderForm.addEventListener("submit", (event) => {
 
   const data = new FormData(orderForm);
   const items = selected.length
-    ? selected.map((entry) => `- ${entry.title}, ${entry.size}, ${fromMoney(entry.price)}`).join("\n")
+    ? selected
+        .map(
+          (entry) =>
+            `- ${entry.title}, ${entry.size}, Qty ${entry.quantity}, ${fromMoney(entry.price * entry.quantity)}`
+        )
+        .join("\n")
     : "- No platter selected yet";
 
-  const total = selected.reduce((sum, entry) => sum + entry.price, 0);
+  const total = selected.reduce((sum, entry) => sum + entry.price * entry.quantity, 0);
   const body = [
     `Name: ${data.get("name")}`,
     `Email: ${data.get("email")}`,
