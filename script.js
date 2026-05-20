@@ -125,11 +125,23 @@ menuGrid.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-item]");
   if (!button) return;
 
-  const item = menuItems[Number(button.dataset.item)];
-  const [size, price] = item.sizes[Number(button.dataset.size)];
+  const itemIndex = Number(button.dataset.item);
+  const sizeIndex = Number(button.dataset.size);
+  const selectedIndex = selected.findIndex(
+    (entry) => entry.itemIndex === itemIndex && entry.sizeIndex === sizeIndex
+  );
+
+  if (selectedIndex >= 0) {
+    selected.splice(selectedIndex, 1);
+    renderCart();
+    return;
+  }
+
+  const item = menuItems[itemIndex];
+  const [size, price] = item.sizes[sizeIndex];
   selected.push({
-    itemIndex: Number(button.dataset.item),
-    sizeIndex: Number(button.dataset.size),
+    itemIndex,
+    sizeIndex,
     title: `${item.script} ${item.label}`,
     size,
     price,
