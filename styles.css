@@ -533,11 +533,11 @@ dd {
 }
 
 .size-actions button.is-selected strong::after {
-  content: " selected";
+  content: " ✓";
   color: var(--rose);
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  text-transform: uppercase;
+  line-height: 1;
 }
 
 .extras {
