@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu & Contact | Pretty Little Platters ADL</title>
+    <meta
+      name="description"
+      content="View the Pretty Little Platters ADL menu, build an order enquiry, and contact us for Adelaide grazing platters, boxes, and tables."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Sacramento&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=3">
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="menu-section menu-page">
+        <div class="menu-page-heading" id="menu">
+          <p class="script">Menu</p>
+          <h1>Beautifully curated grazing for every occasion.</h1>
+          <p>
+            Select a platter size to build an email enquiry, or contact us directly
+            for grazing tables and custom event styling.
+          </p>
+          <a class="button primary" href="#order">Start enquiry</a>
+        </div>
+
+        <div class="menu-grid" id="menuGrid" aria-live="polite"></div>
+
+        <div class="extras">
+          <article>
+            <h3>Grazing tables</h3>
+            <p>Perfect for weddings, corporate events, birthdays, baby showers and special occasions.</p>
+            <dl>
+              <div><dt>Pricing</dt><dd>from $20 pp</dd></div>
+              <div><dt>Guest minimums</dt><dd>apply</dd></div>
+              <div><dt>Setup fees</dt><dd>may apply</dd></div>
+            </dl>
+          </article>
+          <article>
+            <h3>Add-ons</h3>
+            <p>Personalise your platter or table with additional grazing favourites.</p>
+            <dl>
+              <div><dt>Extra Meat</dt><dd>available</dd></div>
+              <div><dt>Extra Cheese</dt><dd>available</dd></div>
+              <div><dt>Extra Sweet Treats</dt><dd>available</dd></div>
+            </dl>
+          </article>
+          <article>
+            <h3>More add-ons</h3>
+            <p>Ask about fresh, savoury, and antipasto extras for your occasion.</p>
+            <dl>
+              <div><dt>Fruit Platter</dt><dd>available</dd></div>
+              <div><dt>Vegetable Platter with dips</dt><dd>available</dd></div>
+              <div><dt>Antipasto Selection</dt><dd>available</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="order-section" id="order">
+        <div class="order-copy">
+          <p class="script">Custom orders</p>
+          <h2>Build an enquiry, then send it through.</h2>
+          <p>
+            Choose platter options from the menu and add your event notes. Every
+            enquiry is reviewed so your spread can be matched to the occasion,
+            guest count, season, and styling brief.
+          </p>
+          <div class="booking-notes">
+            <p>50% deposit required to secure booking</p>
+            <p>Final payment due 24 hours prior to event</p>
+            <p>Delivery fees may apply depending on location</p>
+            <p>Grazing tables and large events require advance booking</p>
+            <p>Products may contain or come into contact with common allergens including nuts, dairy and gluten</p>
+          </div>
+        </div>
+        <form class="order-form" id="orderForm">
+          <label>
+            Your name
+            <input name="name" autocomplete="name" required>
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Phone
+            <input name="phone" autocomplete="tel">
+          </label>
+          <label>
+            Event date
+            <input name="date" type="date">
+          </label>
+          <label>
+            Notes
+            <textarea name="notes" rows="4" placeholder="Occasion, guest count, delivery/pickup preference, dietary needs..."></textarea>
+          </label>
+          <div class="cart">
+            <h3>Your platter enquiry</h3>
+            <div id="cartItems" class="cart-items">No items selected yet.</div>
+            <p class="cart-total" id="cartTotal">Estimated total from: $0</p>
+          </div>
+          <button class="button primary" type="submit">Prepare email order</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <div>
+        <img src="assets/logo.jpg" alt="Pretty Little Platters ADL logo">
+        <p>Pretty Little Platters ADL</p>
+      </div>
+      <address>
+        <a href="https://www.instagram.com/prettylittleplattersadl/">@prettylittleplattersadl</a>
+        <a href="https://www.facebook.com/PLPADL">facebook.com/PLPADL</a>
+        <a href="mailto:prettylittleplattersadl@gmail.com">prettylittleplattersadl@gmail.com</a>
+      </address>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

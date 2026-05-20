@@ -1,0 +1,177 @@
+const menuItems = [
+  {
+    icon: "SG",
+    script: "Signature",
+    label: "Graze",
+    description:
+      "Our signature grazing selection featuring premium cheeses, cured meats, seasonal fruit, dips, crackers and gourmet accompaniments.",
+    sizes: [
+      ["Box (up to 10)", 170],
+      ["Platter (10 - 20)", 290],
+      ["Platter (20 - 30)", 420],
+    ],
+  },
+  {
+    icon: "MC",
+    script: "Meat &",
+    label: "Cheese",
+    description:
+      "A classic charcuterie-style selection with artisan cheeses, premium cured meats and savoury accompaniments.",
+    sizes: [
+      ["Box (up to 10)", 185],
+      ["Platter (10 - 20)", 320],
+      ["Platter (20 - 30)", 470],
+    ],
+  },
+  {
+    icon: "ST",
+    script: "Sweet",
+    label: "Treats",
+    description:
+      "A beautifully styled sweet selection featuring chocolates, baked treats, fresh fruit and dessert-inspired grazing.",
+    sizes: [
+      ["Box (up to 10)", 180],
+      ["Platter (10 - 20)", 310],
+      ["Platter (20 - 30)", 450],
+    ],
+  },
+];
+
+const selected = [];
+const menuGrid = document.querySelector("#menuGrid");
+const cartItems = document.querySelector("#cartItems");
+const cartTotal = document.querySelector("#cartTotal");
+const orderForm = document.querySelector("#orderForm");
+const formStatus = document.querySelector("#formStatus");
+
+function money(value) {
+  return new Intl.NumberFormat("en-AU", {
+    style: "currency",
+    currency: "AUD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function fromMoney(value) {
+  return `From ${money(value)}`;
+}
+
+function renderMenu() {
+  menuGrid.innerHTML = menuItems
+    .map((item, itemIndex) => {
+      const sizes = item.sizes
+        .map(
+          ([name, price], sizeIndex) => `
+            <button type="button" data-item="${itemIndex}" data-size="${sizeIndex}">
+              <span>${name}</span>
+              <strong>${fromMoney(price)}</strong>
+            </button>
+          `
+        )
+        .join("");
+
+      return `
+        <article class="menu-card">
+          <div class="menu-icon" aria-hidden="true">${item.icon}</div>
+          <h3 class="menu-title">${item.script}<span>${item.label}</span></h3>
+          <p>${item.description}</p>
+          <div class="size-actions" aria-label="Add ${item.script} ${item.label} sizes">
+            ${sizes}
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderCart() {
+  if (!selected.length) {
+    cartItems.textContent = "No items selected yet.";
+    cartTotal.textContent = "Estimated total from: $0";
+    syncSelectedButtons();
+    return;
+  }
+
+  cartItems.innerHTML = selected
+    .map(
+      (entry, index) => `
+        <div class="cart-row">
+          <span>${entry.title} - ${entry.size}</span>
+          <strong>${fromMoney(entry.price)}</strong>
+          <button type="button" aria-label="Remove ${entry.title}" data-remove="${index}">&times;</button>
+        </div>
+      `
+    )
+    .join("");
+
+  const total = selected.reduce((sum, entry) => sum + entry.price, 0);
+  cartTotal.textContent = `Estimated total from: ${money(total)}`;
+  syncSelectedButtons();
+}
+
+function syncSelectedButtons() {
+  document.querySelectorAll(".size-actions button").forEach((button) => {
+    const isSelected = selected.some(
+      (entry) =>
+        entry.itemIndex === Number(button.dataset.item) &&
+        entry.sizeIndex === Number(button.dataset.size)
+    );
+    button.classList.toggle("is-selected", isSelected);
+    button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+  });
+}
+
+menuGrid.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-item]");
+  if (!button) return;
+
+  const item = menuItems[Number(button.dataset.item)];
+  const [size, price] = item.sizes[Number(button.dataset.size)];
+  selected.push({
+    itemIndex: Number(button.dataset.item),
+    sizeIndex: Number(button.dataset.size),
+    title: `${item.script} ${item.label}`,
+    size,
+    price,
+  });
+  renderCart();
+});
+
+cartItems.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-remove]");
+  if (!button) return;
+
+  selected.splice(Number(button.dataset.remove), 1);
+  renderCart();
+});
+
+orderForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const data = new FormData(orderForm);
+  const items = selected.length
+    ? selected.map((entry) => `- ${entry.title}, ${entry.size}, ${fromMoney(entry.price)}`).join("\n")
+    : "- No platter selected yet";
+
+  const total = selected.reduce((sum, entry) => sum + entry.price, 0);
+  const body = [
+    `Name: ${data.get("name")}`,
+    `Email: ${data.get("email")}`,
+    `Phone: ${data.get("phone") || ""}`,
+    `Event date: ${data.get("date") || ""}`,
+    "",
+    "Selected items:",
+    items,
+    "",
+    `Estimated total from: ${money(total)}`,
+    "",
+    `Notes: ${data.get("notes") || ""}`,
+  ].join("\n");
+
+  const subject = encodeURIComponent("Pretty Little Platters order enquiry");
+  window.location.href = `mailto:prettylittleplattersadl@gmail.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+  formStatus.textContent = "Email draft prepared with your platter enquiry.";
+});
+
+renderMenu();
+renderCart();
