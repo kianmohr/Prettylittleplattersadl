@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery | Pretty Little Platters ADL</title>
+    <meta
+      name="description"
+      content="Browse the Pretty Little Platters ADL gallery — grazing platters, boxes, boards, and styled tables for Adelaide events."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Sacramento&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=7">
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu & order</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section" style="padding-bottom: 36px;">
+        <div class="section-heading">
+          <p class="script">Our work</p>
+          <h2>A little look at what we do.</h2>
+          <p>
+            From intimate gifting boxes to full grazing tables, every spread is
+            styled with seasonal produce and a polished local touch.
+          </p>
+        </div>
+      </section>
+
+      <div class="slideshow" id="slideshow">
+        <div class="slide is-active">
+          <img src="assets/Feature Image.jpg" alt="Featured grazing platter by Pretty Little Platters ADL">
+          <p class="slide-caption">Featured platter</p>
+        </div>
+        <div class="slide">
+          <img src="assets/HOMEPAGE IMAGE.jpg" alt="Signature grazing platter with fruit and cheeses">
+          <p class="slide-caption">Signature grazing</p>
+        </div>
+        <div class="slide">
+          <img src="assets/Grazing table.png" alt="Grazing table styled for an event">
+          <p class="slide-caption">Grazing tables</p>
+        </div>
+        <div class="slide">
+          <img src="assets/BIRDS EYE LARGE BOARD.png" alt="Birds eye view of a large grazing board">
+          <p class="slide-caption">Large boards</p>
+        </div>
+        <button class="slideshow-btn slideshow-prev" aria-label="Previous image">&#8249;</button>
+        <button class="slideshow-btn slideshow-next" aria-label="Next image">&#8250;</button>
+        <div class="slideshow-dots" aria-label="Gallery navigation"></div>
+      </div>
+
+      <section class="section" style="padding-top: 48px;">
+        <div class="gallery-cta">
+          <a class="button primary" href="menu.html#order">Start an order</a>
+          <a class="button secondary" href="menu.html#menu">View menu</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <div>
+        <img src="assets/logo.jpg" alt="Pretty Little Platters ADL logo">
+        <p>Pretty Little Platters ADL</p>
+      </div>
+      <address>
+        <a href="https://www.instagram.com/prettylittleplattersadl/">@prettylittleplattersadl</a>
+        <a href="https://www.facebook.com/PLPADL">facebook.com/PLPADL</a>
+        <a href="mailto:prettylittleplattersadl@gmail.com">prettylittleplattersadl@gmail.com</a>
+      </address>
+    </footer>
+
+    <script src="transitions.js"></script>
+    <script>
+      (function () {
+        const el = document.getElementById('slideshow');
+        const slides = el.querySelectorAll('.slide');
+        const dotsWrap = el.querySelector('.slideshow-dots');
+        let current = 0;
+        let timer;
+
+        slides.forEach(function (_, i) {
+          const dot = document.createElement('button');
+          dot.className = 'dot' + (i === 0 ? ' is-active' : '');
+          dot.setAttribute('aria-label', 'Image ' + (i + 1));
+          dot.addEventListener('click', function () { reset(); go(i); start(); });
+          dotsWrap.appendChild(dot);
+        });
+
+        function go(n) {
+          slides[current].classList.remove('is-active');
+          dotsWrap.children[current].classList.remove('is-active');
+          current = (n + slides.length) % slides.length;
+          slides[current].classList.add('is-active');
+          dotsWrap.children[current].classList.add('is-active');
+        }
+
+        function start() {
+          timer = setTimeout(function () {
+            go(current + 1);
+            timer = setTimeout(start, 900);
+          }, 5000);
+        }
+        function reset() { clearTimeout(timer); }
+
+        el.querySelector('.slideshow-prev').addEventListener('click', function () { reset(); go(current - 1); start(); });
+        el.querySelector('.slideshow-next').addEventListener('click', function () { reset(); go(current + 1); start(); });
+        el.addEventListener('mouseenter', reset);
+        el.addEventListener('mouseleave', start);
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft') { reset(); go(current - 1); start(); }
+          if (e.key === 'ArrowRight') { reset(); go(current + 1); start(); }
+        });
+
+        start();
+      }());
+    </script>
+  </body>
+</html>
